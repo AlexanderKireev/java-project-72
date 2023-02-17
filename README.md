@@ -26,7 +26,7 @@ make generate-migrations
 
 ## Run
 ```sh
-make run
+make start
 ```
 
 ## Run tests
