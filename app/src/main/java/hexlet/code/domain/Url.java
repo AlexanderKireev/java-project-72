@@ -36,7 +36,7 @@ public class Url extends Model {
         this.name = name;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public final LocalDateTime getCreatedAt() {
         ZoneId zoneId = ZoneId.of("Europe/Moscow");
 //        ZoneId zoneId = ZoneId.of("Europe/Berlin");
         return LocalDateTime.ofInstant(this.createdAt, zoneId);
