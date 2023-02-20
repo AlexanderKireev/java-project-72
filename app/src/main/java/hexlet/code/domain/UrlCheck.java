@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Getter
@@ -40,5 +42,11 @@ public final class UrlCheck extends Model {
         this.h1 = h1;
         this.description = description;
         this.url = url;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        ZoneId zoneId = ZoneId.of("Europe/Moscow");
+//        ZoneId zoneId = ZoneId.of("Europe/Berlin");
+        return LocalDateTime.ofInstant(this.createdAt, zoneId);
     }
 }
