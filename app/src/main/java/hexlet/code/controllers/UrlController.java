@@ -5,6 +5,8 @@ import java.net.URL;
 import hexlet.code.domain.Url;
 import hexlet.code.domain.query.QUrl;
 import io.ebean.PagedList;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,7 +18,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import io.javalin.http.NotFoundResponse;
 import hexlet.code.domain.UrlCheck;
-import hexlet.code.domain.query.QUrlCheck;
 
 public final class UrlController {
 
@@ -27,7 +28,6 @@ public final class UrlController {
         URL url;
 
         try {
-            assert urlFromForm != null;
             url = new URL(urlFromForm);
         } catch (Exception e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
@@ -90,9 +90,13 @@ public final class UrlController {
             throw new NotFoundResponse();
         }
 
-        List<UrlCheck> checks = new QUrlCheck().url.equalTo(url)
-                .orderBy().id.desc()
-                .findList();
+//        List<UrlCheck> checks = new QUrlCheck().url.equalTo(url)
+//                .orderBy().id.desc()
+//                .findList();
+
+        List<UrlCheck> checks = url.getUrlChecks().stream()
+                .sorted(Comparator.comparing(UrlCheck::getId).reversed())
+                .toList();
 
         ctx.attribute("url", url);
         ctx.attribute("checks", checks);
@@ -106,7 +110,10 @@ public final class UrlController {
                 .id.equalTo(id)
                 .findOne();
 
-        assert urlFromDb != null;
+        if (urlFromDb.getName() == null) {
+            throw new NotFoundResponse();
+        }
+
         String urlFromDbName = urlFromDb.getName();
 
         try {
